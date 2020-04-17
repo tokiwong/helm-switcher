@@ -1,4 +1,4 @@
-name: Helmswitch build and deploy
+name: Build
 
 on:
   push:
