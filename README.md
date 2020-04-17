@@ -1,5 +1,7 @@
 # helm-switcher
 
+![Build](https://github.com/tokiwong/helm-switcher/workflows/Build/badge.svg)
+
 `helmswitch` is a CLI tool to install and switch between different versions of Helm 1, 2 or 3.  Once installed, just run the command and use the dropdown to choose the desired version of Helm.
 
 Available for Linux and MacOS
