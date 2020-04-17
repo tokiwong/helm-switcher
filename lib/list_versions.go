@@ -34,8 +34,8 @@ var numPages = 5
 func GetAppList(appURL string, client *modal.Client) ([]string, []modal.Repo) {
 
 	v := url.Values{}
-	v.Set("client_id", client.ClientID)
-	v.Add("client_secret", client.ClientSecret)
+	v.Set("clientID", client.ClientID)
+	v.Add("clientSecret", client.ClientSecret)
 
 	gswitch := http.Client{
 		Timeout: time.Second * 10, // Maximum of 10 secs [decresing this seem to fail]
@@ -140,8 +140,8 @@ func getAppVersion(appURL string, numPages int, client *modal.Client) ([]string,
 		page := strconv.Itoa(i)
 		v := url.Values{}
 		v.Set("page", page)
-		v.Add("client_id", client.ClientID)
-		v.Add("client_secret", client.ClientSecret)
+		v.Add("clientID", client.ClientID)
+		v.Add("clientSecret", client.ClientSecret)
 
 		apiURL := appURL + v.Encode()
 		wg.Add(1)
