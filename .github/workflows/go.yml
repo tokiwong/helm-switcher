@@ -31,8 +31,8 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v1
       with:
-        name: helmswitch
-        path: ./helmswitch
+        name: helmswitch-${{ matrix.os }} 
+        path: ./helmswitch-${{ matrix.os }} 
     
       
     
