@@ -17,6 +17,8 @@ const (
 	defaultBin = "/usr/local/bin/helm"
 )
 
+var version = "0.0.1\n"
+
 var clientID = "xxx"
 var clientSecret = "xxx"
 
@@ -29,12 +31,16 @@ func main() {
 
 	custBinPath := getopt.StringLong("bin", 'b', defaultBin, "Custom binary path. For example: /Users/username/bin/helm")
 	helpFlag := getopt.BoolLong("help", 'h', "displays help message")
+	versionFlag := getopt.BoolLong("version", 'v', "displays the version of tgswitch")
+	_ = versionFlag
 
 	getopt.Parse()
 	args := getopt.Args()
 
 	if *helpFlag {
 		usageMessage()
+	} else if *versionFlag {
+		fmt.Printf("Version: %v\n", version)
 	} else {
 		if len(args) == 0 {
 			helmList, assets := lib.GetAppList(helmURL, &client)
