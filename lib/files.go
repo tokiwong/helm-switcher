@@ -49,10 +49,10 @@ func CheckFileExist(file string) bool {
 //CreateDirIfNotExist : create directory if directory does not exist
 func CreateDirIfNotExist(dir string) {
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		log.Printf("Creating directory for teraform: %v", dir)
+		log.Printf("Creating directory for helm: %v", dir)
 		err = os.MkdirAll(dir, 0755)
 		if err != nil {
-			fmt.Printf("Unable to create directory for teraform: %v", dir)
+			fmt.Printf("Unable to create directory for helm: %v", dir)
 			panic(err)
 		}
 	}
@@ -164,7 +164,7 @@ func Path(value string) string {
 	return filepath.Dir(value)
 }
 
-func Untar(dst string, r io.Reader) error {
+func Untar(dest string, r io.Reader) error {
 
 	gzr, err := gzip.NewReader(r)
 	if err != nil {
@@ -193,7 +193,7 @@ func Untar(dst string, r io.Reader) error {
 		}
 
 		// the target location where the dir/file should be created
-		target := filepath.Join(dst, header.Name)
+		target := filepath.Join(dest, header.Name)
 
 		// the following switch could also be done using fi.Mode(), not sure if there
 		// a benefit of using one vs. the other.
