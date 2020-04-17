@@ -21,4 +21,4 @@ Helm is the Kubernetes Package Manager, and Helm 2 will be deprecated at the end
 Or just `go run main.go`
 
 ## How-to
-![helmswitch demo](demo/helmswitch-demo.gif)
+![helmswitch demo](demo/demo.gif)
