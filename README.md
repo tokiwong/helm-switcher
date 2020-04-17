@@ -2,7 +2,7 @@
 
 `helmswitch` is a CLI tool to install and switch between different versions of Helm 1, 2 or 3.  Once installed, just run the command and use the dropdown to choose the desired version of Helm.
 
-WIP, only confirmed to work for Linux-AMD64
+Available for Linux and MacOS
 
 ## Why
 
@@ -20,5 +20,8 @@ Helm is the Kubernetes Package Manager, and Helm 2 will be deprecated at the end
 
 Or just `go run main.go`
 
-## How-to
+## How-to.
+- `helmswitch` to open the menu and select the desired version, navigable with arrow keys
+- `helmswitch {{ version_number }}` to download the desired version
+
 ![helmswitch demo](demo/demo.gif)
