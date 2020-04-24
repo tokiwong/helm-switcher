@@ -16,9 +16,17 @@ Helm is the Kubernetes Package Manager, and Helm 2 will be deprecated at the end
 - Go 1.14
 
 ## Installation
+
 - Linux and MacOS Binaries are available as assets in [Releases](https://github.com/tokiwong/helm-switcher/releases)
 - `chmod +x`
 - Put the binary in your PATH
+
+### Homebrew 
+
+MacOS installations via Homebrew will place `helmswitch` into `/usr/local/bin`
+```
+brew install tokiwong/tap/helm-switcher
+```
 
 ## Installing from source
 
