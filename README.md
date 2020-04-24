@@ -35,7 +35,7 @@ brew install tokiwong/tap/helm-switcher
 
 Or just `go run main.go`
 
-## How-to.
+## How-to
 - `helmswitch` to open the menu and select the desired version, navigable with arrow keys
 - `helmswitch {{ version_number }}` to download the desired version
 
