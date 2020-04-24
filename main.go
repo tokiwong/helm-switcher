@@ -17,7 +17,7 @@ const (
 	defaultBin = "/usr/local/bin/helm"
 )
 
-var version = "0.0.1\n"
+var version = "0.0.2\n"
 
 var clientID = "xxx"
 var clientSecret = "xxx"
