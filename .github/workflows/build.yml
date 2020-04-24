@@ -26,13 +26,13 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build
-      run: go build -o helmswitch-${{ matrix.os }} 
+      run: go build -o helmswitch
     
     - name: Upload
       uses: actions/upload-artifact@v1
       with:
-        name: helmswitch
-        path: ./helmswitch-${{ matrix.os }} 
+        name: helmswitch-${{ matrix.os }} 
+        path: ./helmswitch
     
       
     
