@@ -17,7 +17,7 @@ const (
 	defaultBin = "/usr/local/bin/helm"
 )
 
-var version = "0.0.2\n"
+var version = "0.0.3\n"
 
 var clientID = "xxx"
 var clientSecret = "xxx"
@@ -73,8 +73,8 @@ func main() {
 				requestedVersion := args[0]
 
 				//check if version exist before downloading it
-				tflist, assets := lib.GetAppList(helmURL, &client)
-				exist := lib.VersionExist(requestedVersion, tflist)
+				helmList, assets := lib.GetAppList(helmURL, &client)
+				exist := lib.VersionExist(requestedVersion, helmList)
 
 				if exist {
 					installLocation := lib.Install(helmURL, requestedVersion, assets, custBinPath)
