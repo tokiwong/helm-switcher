@@ -68,9 +68,29 @@ func GetAppList(appURL string, client *modal.Client) ([]string, []modal.Repo) {
 
 	applist, assets := getAppVersion(appURL, numPages, client)
 
-	if len(applist) == 0 {
-		log.Fatal("Unable to get release from repo ")
+	if len(applist) == 40 {
+		for header, v := range resp.Header {
+			switch header {
+			case "X-Ratelimit-Remaining":
+				fmt.Print("API Requests Remaining")
+				fmt.Print(" : ")
+				fmt.Println(v)
+			case "X-Ratelimit-Reset":
+				fmt.Print("Your Rate Limit will reset at")
+				fmt.Print(" : ")
+				epochTime, err := strconv.Atoi(strings.Join(v, " "))
+				if err != nil {
+					panic(err)
+				}
+				resetTime := time.Unix(int64(epochTime), 0)
+				fmt.Println(resetTime)
+				log.Fatal()
+			}
+	       
+		}
+		log.Fatal("Unable to get release from repo, please try again later")
 		os.Exit(1)
+		
 	}
 
 	return applist, assets
@@ -182,14 +202,14 @@ func getAppVersion(appURL string, numPages int, client *modal.Client) ([]string,
 	return sortedVersion, assets
 }
 
-func getAppBody(gruntURLPage string, ch chan<- *[]modal.Repo) {
+func getAppBody(helmURLPage string, ch chan<- *[]modal.Repo) {
 	defer wg.Done()
 
 	gswitch := http.Client{
 		Timeout: time.Second * 10, // Maximum of 10 secs [decresing this seem to fail]
 	}
 
-	req, err := http.NewRequest(http.MethodGet, gruntURLPage, nil)
+	req, err := http.NewRequest(http.MethodGet, helmURLPage, nil)
 	if err != nil {
 		log.Fatal("Unable to make request. Please try again.")
 	}
@@ -210,6 +230,24 @@ func getAppBody(gruntURLPage string, ch chan<- *[]modal.Repo) {
 	var repo []modal.Repo
 	jsonErr := json.Unmarshal(body, &repo)
 	if jsonErr != nil {
+		for header, v := range res.Header {
+			switch header {
+			case "X-Ratelimit-Remaining":
+				fmt.Print("API Requests Remaining")
+				fmt.Print(" : ")
+				fmt.Println(v)
+			case "X-Ratelimit-Reset":
+				fmt.Print("Your Rate Limit will reset at")
+				fmt.Print(" : ")
+				epochTime, err := strconv.Atoi(strings.Join(v, " "))
+				if err != nil {
+					panic(err)
+				}
+				resetTime := time.Unix(int64(epochTime), 0)
+				fmt.Println(resetTime)
+			}
+	       
+		}
 		log.Fatal("Unable to get release from repo ")
 		log.Fatal(jsonErr)
 	}
