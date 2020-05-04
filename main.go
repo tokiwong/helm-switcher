@@ -31,7 +31,7 @@ func main() {
 
 	custBinPath := getopt.StringLong("bin", 'b', defaultBin, "Custom binary path. For example: /Users/username/bin/helm")
 	helpFlag := getopt.BoolLong("help", 'h', "displays help message")
-	versionFlag := getopt.BoolLong("version", 'v', "displays the version of tgswitch")
+	versionFlag := getopt.BoolLong("version", 'v', "displays the version of helmswitch")
 	_ = versionFlag
 
 	getopt.Parse()

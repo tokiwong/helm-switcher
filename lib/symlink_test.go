@@ -13,9 +13,9 @@ import (
 // create symlink, check if symlink exist, remove symlink
 func TestCreateSymlink(t *testing.T) {
 
-	testSymlinkSrc := "/test-tgswitch-src"
+	testSymlinkSrc := "/test-helmswitch-src"
 
-	testSymlinkDest := "/test-tgswitch-dest"
+	testSymlinkDest := "/test-helmswitch-dest"
 
 	usr, errCurr := user.Current()
 	if errCurr != nil {
@@ -51,9 +51,9 @@ func TestCreateSymlink(t *testing.T) {
 // remove symlink, check if symlink exist
 func TestRemoveSymlink(t *testing.T) {
 
-	testSymlinkSrc := "/test-tgswitch-src"
+	testSymlinkSrc := "/test-helmswitch-src"
 
-	testSymlinkDest := "/test-tgswitch-dest"
+	testSymlinkDest := "/test-helmswitch-dest"
 
 	usr, errCurr := user.Current()
 	if errCurr != nil {
@@ -86,9 +86,9 @@ func TestRemoveSymlink(t *testing.T) {
 // TestCheckSymlink : Create symlink, test if file is symlink
 func TestCheckSymlink(t *testing.T) {
 
-	testSymlinkSrc := "/test-tgswitcher-src"
+	testSymlinkSrc := "/test-helmswitcher-src"
 
-	testSymlinkDest := "/test-tgswitcher-dest"
+	testSymlinkDest := "/test-helmswitcher-dest"
 
 	usr, errCurr := user.Current()
 	if errCurr != nil {

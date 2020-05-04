@@ -1,8 +1,11 @@
 package lib
 
 import (
+	"archive/tar"
 	"bufio"
 	"bytes"
+	"compress/gzip"
+	"crypto/sha256"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -10,8 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"archive/tar"
-	"compress/gzip"
 )
 
 // RenameFile : rename file name
@@ -128,8 +129,8 @@ func IsDirEmpty(name string) bool {
 	return exist // Either not empty or error, suits both cases
 }
 
-//CheckDirHasTGBin : // check binary exist (TODO UNIT TEST)
-func CheckDirHasTGBin(dir, prefix string) bool {
+//CheckDirHasHelmBin : // check binary exist (TODO UNIT TEST)
+func CheckDirHasHelmBin(dir, prefix string) bool {
 
 	exist := false
 
@@ -221,10 +222,46 @@ func Untar(dest string, r io.Reader) error {
 			if _, err := io.Copy(f, tr); err != nil {
 				return err
 			}
-			
+
 			// manually close here after each file operation; defering would cause each file close
 			// to wait until all operations have completed.
 			f.Close()
 		}
 	}
+}
+
+func VerifyChecksum(fileInstalled string, chkInstalled string) bool {
+
+	fmt.Println("Verifying SHA sum")
+
+	file, err := os.Open(fileInstalled)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	fileHash := sha256.New()
+	if _, err := io.Copy(fileHash, file); err != nil {
+		log.Fatal(err)
+	}
+
+	fileSha := fmt.Sprintf("%x", fileHash.Sum(nil))
+	fmt.Println(fileSha)
+
+	chkContent, err := ioutil.ReadFile(chkInstalled)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	chkOut := string(chkContent)
+	fmt.Println(chkOut)
+
+	if fileSha != chkOut[0:64] {
+		log.Fatal("Expecting: " + chkOut + ", Received: " + fileSha + ". Aborting.")
+		return false
+	}
+	os.Remove(chkInstalled)
+	fmt.Println("SHA sum verified")
+	return true
+
 }
