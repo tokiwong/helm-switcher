@@ -107,6 +107,7 @@ func Install(url string, appversion string, assets []modal.Repo, userBinPath *st
 	goarch := runtime.GOARCH
 	goos := runtime.GOOS
 	urlDownload := ""
+	chkDownload := ""
 
 	for _, v := range assets {
 
@@ -119,6 +120,7 @@ func Install(url string, appversion string, assets []modal.Repo, userBinPath *st
 					if matchedOS && matchedARCH {
 						// urlDownload = b.BrowserDownloadURL
 						urlDownload = "https://get.helm.sh/helm-" + v.TagName + "-" + goos + "-" + goarch + ".tar.gz"
+						chkDownload = urlDownload + ".sha256"
 						break
 					}
 				}
@@ -131,6 +133,13 @@ func Install(url string, appversion string, assets []modal.Repo, userBinPath *st
 	tarRead, readErr := os.Open(fileInstalled)
 	if readErr != nil {
 		fmt.Println("Expected a location, found " + fileInstalled)
+	}
+
+	chkInstalled, _ := DownloadFromURL(installLocation, chkDownload)
+	
+	verifySha := VerifyChecksum(fileInstalled, chkInstalled)
+	if verifySha != true {
+		log.Fatal("didn't pass the verify step")
 	}
 
 	/* untar the downloaded file*/
