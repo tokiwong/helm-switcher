@@ -21,7 +21,7 @@ const (
 	installPath    = "/.helm.versions/"
 )
 
-var version = "0.0.4\n"
+var version = "0.0.5\n"
 
 var clientID = "xxx"
 var clientSecret = "xxx"
