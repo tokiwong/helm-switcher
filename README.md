@@ -38,5 +38,6 @@ Or just `go run main.go`
 ## How-to
 - `helmswitch` to open the menu and select the desired version, navigable with arrow keys
 - `helmswitch {{ version_number }}` to download the desired version
+  - Example: `helmswitch 3.1.1` switches to Helm v3.1.1
 
 ![helmswitch demo](demo/demo.gif)
