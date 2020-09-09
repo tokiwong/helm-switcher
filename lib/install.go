@@ -6,13 +6,13 @@ import (
 	"os"
 	"os/user"
 	"regexp"
-	"runtime" 
+	"runtime"
 
 	"github.com/tokiwong/helm-switcher/modal"
 )
 
 const (
-	helmURL       = "https://get.helm.sh/"
+	helmURL        = "https://get.helm.sh/"
 	installFile    = "helm"
 	installVersion = "helm_"
 	binLocation    = "/usr/local/bin/helm"
@@ -76,22 +76,22 @@ func Install(url string, appversion string, assets []modal.Repo, userBinPath *st
 	}
 
 	/* check if selected version already downloaded */
-	fileExist := CheckFileExist(installLocation + installVersion + appversion)
+	// fileExist := CheckFileExist(installLocation + installVersion + appversion)
 
 	/* if selected version already exist, */
-	if fileExist {
+	// if fileExist {
 
-		/* remove current symlink if exist*/
-		symlinkExist := CheckSymlink(installedBinPath)
+	// 	/* remove current symlink if exist*/
+	// 	symlinkExist := CheckSymlink(installedBinPath)
 
-		if symlinkExist {
-			RemoveSymlink(installedBinPath)
-		}
-		/* set symlink to desired version */
-		CreateSymlink(installLocation+installVersion+appversion, installedBinPath)
-		fmt.Printf("Switched helm to version %q \n", appversion)
-		return installLocation
-	}
+	// 	if symlinkExist {
+	// 		RemoveSymlink(installedBinPath)
+	// 	}
+	// 	/* set symlink to desired version */
+	// 	CreateSymlink(installLocation+installVersion+appversion, installedBinPath)
+	// 	fmt.Printf("Switched helm to version %q \n", appversion)
+	// 	return installLocation
+	// }
 
 	/* remove current symlink if exist*/
 	symlinkExist := CheckSymlink(installedBinPath)
@@ -136,7 +136,6 @@ func Install(url string, appversion string, assets []modal.Repo, userBinPath *st
 	}
 
 	chkInstalled, _ := DownloadFromURL(installLocation, chkDownload)
-	
 	verifySha := VerifyChecksum(fileInstalled, chkInstalled)
 	if verifySha != true {
 		log.Fatal("didn't pass the verify step")

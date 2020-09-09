@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/user"
 	"regexp"
 
 	"github.com/manifoldco/promptui"
@@ -13,11 +14,14 @@ import (
 )
 
 const (
-	helmURL    = "https://api.github.com/repos/helm/helm/releases?"
-	defaultBin = "/usr/local/bin/helm"
+	helmURL        = "https://api.github.com/repos/helm/helm/releases?"
+	defaultBin     = "/usr/local/bin/helm"
+	installFile    = "helm"
+	installVersion = "helm_"
+	installPath    = "/.helm.versions/"
 )
 
-var version = "0.0.4\n"
+var version = "0.0.5\n"
 
 var clientID = "xxx"
 var clientSecret = "xxx"
@@ -72,16 +76,45 @@ func main() {
 			if semverRegex.MatchString(args[0]) {
 				requestedVersion := args[0]
 
-				//check if version exist before downloading it
-				helmList, assets := lib.GetAppList(helmURL, &client)
-				exist := lib.VersionExist(requestedVersion, helmList)
-
-				if exist {
-					installLocation := lib.Install(helmURL, requestedVersion, assets, custBinPath)
-					lib.AddRecent(requestedVersion, installLocation) //add to recent file for faster lookup
-				} else {
-					fmt.Println("Not a valid helm version")
+				//check if version is already downloaded before checking if it exists
+				/* get current user */
+				usr, errCurr := user.Current()
+				if errCurr != nil {
+					log.Fatal(errCurr)
 				}
+				/* set installation location */
+				installLocation := usr.HomeDir + installPath
+
+				fileInstalled := lib.CheckFileExist(installLocation + installVersion + requestedVersion)
+
+				if fileInstalled {
+
+					/* remove current symlink if exist*/
+					symlinkExist := lib.CheckSymlink(defaultBin)
+
+					if symlinkExist {
+						lib.RemoveSymlink(defaultBin)
+					}
+					/* set symlink to desired version */
+					lib.CreateSymlink(installLocation+installVersion+requestedVersion, defaultBin)
+					fmt.Printf("Switched helm to version %q \n", requestedVersion)
+				} else {
+					//check if version exist before downloading it
+					fmt.Println(requestedVersion + " not found in install path " + installPath)
+					fmt.Println("Checking if the version exists...")
+
+					helmList, assets := lib.GetAppList(helmURL, &client)
+					exist := lib.VersionExist(requestedVersion, helmList)
+
+					if exist {
+						installLocation := lib.Install(helmURL, requestedVersion, assets, custBinPath)
+						lib.AddRecent(requestedVersion, installLocation) //add to recent file for faster lookup
+					} else {
+						fmt.Println("Not a valid helm version")
+					}
+
+				}
+
 			} else {
 				usageMessage()
 			}
