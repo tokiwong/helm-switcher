@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"regexp"
+	"runtime"
 
 	"github.com/manifoldco/promptui"
 	"github.com/pborman/getopt"
@@ -36,6 +37,8 @@ func main() {
 	custBinPath := getopt.StringLong("bin", 'b', defaultBin, "Custom binary path. For example: /Users/username/bin/helm")
 	helpFlag := getopt.BoolLong("help", 'h', "displays help message")
 	versionFlag := getopt.BoolLong("version", 'v', "displays the version of helmswitch")
+	skipCheckFlag := getopt.BoolLong("skip-check", 's', "skips checking GitHub releases before downloading")
+
 	_ = versionFlag
 
 	getopt.Parse()
@@ -71,10 +74,11 @@ func main() {
 
 			fmt.Println(helmList)
 
-		} else if len(args) == 1 {
+		} else if len(args) >= 1 {
 			semverRegex := regexp.MustCompile(`\A\d+(\.\d+){2}\z`)
 			if semverRegex.MatchString(args[0]) {
 				requestedVersion := args[0]
+				fmt.Println("Checking local directory...")
 
 				//check if version is already downloaded before checking if it exists
 				/* get current user */
@@ -98,6 +102,55 @@ func main() {
 					/* set symlink to desired version */
 					lib.CreateSymlink(installLocation+installVersion+requestedVersion, defaultBin)
 					fmt.Printf("Switched helm to version %q \n", requestedVersion)
+
+				} else if *skipCheckFlag {
+					//tries to download helm version from helm.sh without checking if it exists first
+					fmt.Println("-s flag detected, skipping GitHub check")
+					goarch := runtime.GOARCH
+					goos := runtime.GOOS
+					directUrl := "https://get.helm.sh/helm-v" + requestedVersion + "-" + goos + "-" + goarch + ".tar.gz"
+					chkDirectUrl := directUrl + ".sha256"
+					fmt.Println("Attempting to download " + requestedVersion + "directly")
+
+					fileInstalled, downloadErr := lib.DownloadFromURL(installLocation, directUrl)
+					if downloadErr != nil {
+						log.Fatal("Unable to download: ", downloadErr)
+					}
+
+					tarRead, readErr := os.Open(fileInstalled)
+					if readErr != nil {
+						fmt.Println("Expected a location, found " + fileInstalled)
+					}
+
+					chkInstalled, _ := lib.DownloadFromURL(installLocation, chkDirectUrl)
+					verifySha := lib.VerifyChecksum(fileInstalled, chkInstalled)
+					if verifySha != true {
+						log.Fatal("didn't pass the verify step")
+					}
+
+					/* untar the downloaded file*/
+					lib.Untar(installLocation, tarRead)
+					binDir := installLocation + "/" + goos + "-" + goarch + "/helm"
+
+					/* rename file to helm version name - helm_x.x.x */
+					lib.RenameFile(binDir, installLocation+installVersion+requestedVersion)
+
+					err := os.Chmod(installLocation+installVersion+requestedVersion, 0755)
+					if err != nil {
+						log.Println(err)
+					}
+
+					/* remove current symlink if exist*/
+					symlinkExist := lib.CheckSymlink(defaultBin)
+
+					if symlinkExist {
+						lib.RemoveSymlink(defaultBin)
+					}
+
+					/* set symlink to desired version */
+					lib.CreateSymlink(installLocation+installVersion+requestedVersion, defaultBin)
+					fmt.Printf("Switched helm to version %q \n", requestedVersion)
+
 				} else {
 					//check if version exist before downloading it
 					fmt.Println(requestedVersion + " not found in install path " + installPath)

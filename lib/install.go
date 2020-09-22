@@ -75,24 +75,6 @@ func Install(url string, appversion string, assets []modal.Repo, userBinPath *st
 		os.Exit(1)
 	}
 
-	/* check if selected version already downloaded */
-	// fileExist := CheckFileExist(installLocation + installVersion + appversion)
-
-	/* if selected version already exist, */
-	// if fileExist {
-
-	// 	/* remove current symlink if exist*/
-	// 	symlinkExist := CheckSymlink(installedBinPath)
-
-	// 	if symlinkExist {
-	// 		RemoveSymlink(installedBinPath)
-	// 	}
-	// 	/* set symlink to desired version */
-	// 	CreateSymlink(installLocation+installVersion+appversion, installedBinPath)
-	// 	fmt.Printf("Switched helm to version %q \n", appversion)
-	// 	return installLocation
-	// }
-
 	/* remove current symlink if exist*/
 	symlinkExist := CheckSymlink(installedBinPath)
 
