@@ -90,13 +90,13 @@ func main() {
 				if fileInstalled {
 
 					/* remove current symlink if exist*/
-					symlinkExist := lib.CheckSymlink(defaultBin)
+					symlinkExist := lib.CheckSymlink(*custBinPath)
 
 					if symlinkExist {
-						lib.RemoveSymlink(defaultBin)
+						lib.RemoveSymlink(*custBinPath)
 					}
 					/* set symlink to desired version */
-					lib.CreateSymlink(installLocation+installVersion+requestedVersion, defaultBin)
+					lib.CreateSymlink(installLocation+installVersion+requestedVersion, *custBinPath)
 					fmt.Printf("Switched helm to version %q \n", requestedVersion)
 				} else {
 					//check if version exist before downloading it
